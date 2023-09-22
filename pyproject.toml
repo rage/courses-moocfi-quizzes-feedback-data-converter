@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "sustainability-feedback-data-converter"
+version = "0.1.0"
+description = ""
+authors = ["Henrik Nygren <nygrenh@gmail.com>"]
+license = "Apache-2.0"
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.13"
+polars = "^0.19.3"
+PyYAML = "^6.0.1"
+XlsxWriter = "^3.1.4"
+numpy = "^1.26.0"
+
+[tool.poetry.dev-dependencies]
+ipykernel = "^6.25.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
