@@ -7,6 +7,7 @@ from collections import defaultdict
 import xlsxwriter
 from datetime import date
 import numpy as np
+import pdb
 
 # Check that the ./data folder exists
 try:
@@ -65,14 +66,21 @@ feedback_exercises = sorted(
 )
 
 df_submissions = pl.read_csv(
-    f"./data/{most_recent_submission_file}", infer_schema_length=10000
+    f"./data/{most_recent_submission_file}",
+    infer_schema_length=10000,
+    try_parse_dates=True,
 )
 df_exercise_tasks = pl.read_csv(
-    f"./data/{most_recent_exercisetasks_file}", infer_schema_length=10000
+    f"./data/{most_recent_exercisetasks_file}",
+    infer_schema_length=10000,
+    try_parse_dates=True,
 )
+
+pdb.set_trace()
 
 # dict with default values
 res = defaultdict(lambda: defaultdict(dict))
+ex_submission_by_exercise_slide_submission_id = dict()
 
 for feedback_exercise in feedback_exercises:
     print(
@@ -84,6 +92,11 @@ for feedback_exercise in feedback_exercises:
     )
     print(f"Found {len(ex_df)} submissions for this exercise.")
     for ex_submission in ex_df.rows(named=True):
+        # Save the exercise submission to a dict so that it's easy to find the data later
+        ex_submission_by_exercise_slide_submission_id[
+            ex_submission["exercise_slide_submission_id"]
+        ] = ex_submission
+
         exercise_task_id = ex_submission["exercise_task_id"]
         exercise_task = df_exercise_tasks.filter(pl.col("id") == exercise_task_id).rows(
             named=True
@@ -104,17 +117,17 @@ for feedback_exercise in feedback_exercises:
                     # Essay
                     text_data = item_answer["textData"].strip()
                     # print(f"{quiz_item_title}: {text_data}")
-                    res[feedback_exercise["chapter_number"]][ex_submission["id"]][
-                        "Open feedback"
-                    ] = text_data
+                    res[feedback_exercise["chapter_number"]][
+                        ex_submission["exercise_slide_submission_id"]
+                    ]["Open feedback"] = text_data
                 else:
                     selected_option = item_answer["intData"]
                     if selected_option is None:
                         selected_option = int(item_answer["optionAnswers"][0])
                     # print(f"{quiz_item_title}: {selected_option}")
-                    res[feedback_exercise["chapter_number"]][ex_submission["id"]][
-                        quiz_item_title
-                    ] = selected_option
+                    res[feedback_exercise["chapter_number"]][
+                        ex_submission["exercise_slide_submission_id"]
+                    ][quiz_item_title.strip()] = selected_option
             except Exception as e:
                 print("Error", e)
                 print("item_answer", item_answer)
@@ -124,7 +137,7 @@ for feedback_exercise in feedback_exercises:
 
     # if 1==1:
     #     exit(0)
-print(json.dumps(res, indent=4))
+
 # print(df_submisssions)
 
 
@@ -132,8 +145,8 @@ print(json.dumps(res, indent=4))
 # extract all keys from the nested dict
 all_keys = set()
 for chapter in res:
-    for submission_id in res[chapter]:
-        for key in res[chapter][submission_id]:
+    for exercise_slide_submission_id in res[chapter]:
+        for key in res[chapter][exercise_slide_submission_id]:
             all_keys.add(key)
 
 
@@ -146,8 +159,9 @@ def sort_key(x):
 
 
 all_keys = sorted(all_keys, key=sort_key)
-
-print(all_keys)
+print()
+print(f"Using questions: {all_keys}")
+print()
 
 current_timestamp_in_iso_format = date.today().isoformat()
 workbook = xlsxwriter.Workbook(
@@ -162,11 +176,18 @@ if not os.path.exists("./output"):
 for chapter in res:
     print(f"Writing chapter {chapter} to excel.")
     data = list()
-    for submission_id in res[chapter]:
-        row = [submission_id]
+    for exercise_slide_submission_id in res[chapter]:
+        whole_submission = ex_submission_by_exercise_slide_submission_id[
+            exercise_slide_submission_id
+        ]
+        row = [
+            whole_submission["created_at"],
+            whole_submission["user_id"],
+            exercise_slide_submission_id,
+        ]
         for key in all_keys:
-            if key in res[chapter][submission_id]:
-                row.append(res[chapter][submission_id][key])
+            if key in res[chapter][exercise_slide_submission_id]:
+                row.append(res[chapter][exercise_slide_submission_id][key])
             else:
                 row.append("")
         # Add the average of all numbers in row to the end of the row
@@ -186,7 +207,7 @@ for chapter in res:
             row.append("")
         data.append(row)
 
-    schema = ["submission_id"]
+    schema = ["created_at", "user_id", "submission_id"]
     schema.extend(all_keys)
     schema.extend(["Mean", "Median", "Standard deviation"])
     df_chapter = pl.DataFrame(data, schema=schema)
