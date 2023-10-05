@@ -41,7 +41,7 @@ jobs:
         run: codesign --force -s - ./dist/main
 
       - name: Rename built binary
-        run: poetry run mv ./dist/main ./dist/main-${{ matrix.os }}
+        run: poetry run mv ./dist/main ./dist/feedback-data-converter-${{ matrix.os }}
         
       - name: Store built binary
         uses: actions/upload-artifact@v3
@@ -66,8 +66,9 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ./dist/*
-          name: converter-binary
-          tag_name: release
+          name: $(date +'%Y-%m-%d %H:%M')
+          tag_name: $(date +'%Y-%m-%d %H:%M')
+
     permissions:
       contents: write
 
