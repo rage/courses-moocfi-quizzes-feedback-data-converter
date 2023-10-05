@@ -8,12 +8,21 @@ import xlsxwriter
 from datetime import date
 import numpy as np
 import pdb
+import sys
+
+current_file_path = sys.executable
+basename = os.path.basename(current_file_path)
+if basename == "python.exe" or basename == "python" or basename == "python3":
+    print("Running from source")
+    current_file_path = __file__
 
 
 def main():
     # Change pwd to the directory of this file
-    abspath = os.path.abspath(__file__)
+
+    abspath = os.path.abspath(current_file_path)
     dname = os.path.dirname(abspath)
+    print(f"Changing working directory to {dname}")
     os.chdir(dname)
 
     # If config.yml does not exist, create it from the template
