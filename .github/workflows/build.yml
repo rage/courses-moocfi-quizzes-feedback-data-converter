@@ -38,9 +38,14 @@ jobs:
       - name: Sign the macos-version build
         if: ${{ matrix.os  == 'macos-latest' }}
         run: codesign --force -s - ./dist/main
+      - name: Set env for release
+        run: echo "OS=$(echo ${{ matrix.os }} | cut -d'-' -f1)" >> $GITHUB_ENV
+      - name: Make binary executable
+        if: ${{ matrix.os  == 'macos-latest' || matrix.os  == 'ubuntu-latest' }}
+        run: chmod +x ./dist/main
 
       - name: Rename built binary
-        run: poetry run mv ./dist/main ./dist/feedback-data-converter-${{ matrix.os }}
+        run: poetry run mv ./dist/main ./dist/feedback-data-converter-${{ env.OS }}
 
       - name: Store built binary
         uses: actions/upload-artifact@v3
@@ -61,7 +66,7 @@ jobs:
           name: converter-binary
           path: ./dist/
       - name: Set env for release
-        run: echo "DATE=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_ENV
+        run: echo "DATE=$(date +'%Y-%m-%d/%H-%M')" >> $GITHUB_ENV
       - uses: rickstaa/action-create-tag@v1
         id: "tag_create"
         with:
