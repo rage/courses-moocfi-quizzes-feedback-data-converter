@@ -54,19 +54,27 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
+      - uses: actions/checkout@v3
       - name: Download built binary
         uses: actions/download-artifact@v3
         with:
           name: converter-binary
           path: ./dist/
       - name: Set env for release
-        run: echo "DATE=$(date +'%Y-%m-%d %H:%M')" >> $GITHUB_ENV
+        run: echo "DATE=$(date +'%Y-%m-%d-%H-%M')" >> $GITHUB_ENV
+      - uses: rickstaa/action-create-tag@v1
+        id: "tag_create"
+        with:
+          tag: "${{ env.DATE }}"
+          tag_exists_error: true
+          message: Release ${{ env.DATE }}
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
           files: ./dist/*
-          name: ${{ env.DATE }}
-          tag_name: ${{ env.DATE }}
+          name: Release ${{ env.DATE }}
+          tag_name: "${{ env.DATE }}"
 
     permissions:
       contents: write
