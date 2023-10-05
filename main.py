@@ -9,11 +9,34 @@ from datetime import date
 import numpy as np
 import pdb
 
-# Check that the ./data folder exists
-try:
-    dir = os.listdir("./data")
-except OSError as error:
-    print(error)
+# Change pwd to the directory of this file
+abspath = os.path.abspath(__file__)
+dname = os.path.dirname(abspath)
+os.chdir(dname)
+
+# If config.yml does not exist, create it from the template
+if not os.path.exists("config.yml"):
+    with open("config.yml", "w") as f:
+        f.write(
+            """feedback-exercises:
+  - chapter_number: 1
+    exercise_id: x
+  - chapter_number: 2
+    exercise_id: y
+            """
+        )
+    print(
+        "Created config.yml from template. Please edit the file and run the script again."
+    )
+    exit(255)
+
+with open("config.yml", "r") as ymlfile:
+    cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
+print("Loaded config.yml")
+
+# Create the data folder if it does not exist
+if not os.path.exists("./data"):
+    os.makedirs("./data")
 
 # Read the needed files from the ./data repository
 submission_files = []
@@ -57,9 +80,6 @@ print(f'Using the file "{most_recent_submission_file}" as input for submissions.
 print(f'Using the file "{most_recent_exercisetasks_file}" as input for exercise tasks.')
 print()
 
-
-with open("config.yml", "r") as ymlfile:
-    cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
 
 feedback_exercises = sorted(
     cfg["feedback-exercises"], key=lambda x: (x["chapter_number"]), reverse=False
