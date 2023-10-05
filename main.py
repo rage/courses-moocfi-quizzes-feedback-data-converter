@@ -70,13 +70,24 @@ df_submissions = pl.read_csv(
     infer_schema_length=10000,
     try_parse_dates=True,
 )
+print(f"Found {len(df_submissions)} submissions in the file.")
+
+# One user may have submitted multiple times, we only want the most recent submission
+df_submissions = df_submissions.sort(by="created_at", descending=True)
+df_submissions = df_submissions.unique(
+    subset=["user_id", "exercise_task_id"], maintain_order=True
+)
+
+print(f"After removing duplicates, there are {len(df_submissions)} submissions left.")
+
+print("")
+
 df_exercise_tasks = pl.read_csv(
     f"./data/{most_recent_exercisetasks_file}",
     infer_schema_length=10000,
     try_parse_dates=True,
 )
 
-pdb.set_trace()
 
 # dict with default values
 res = defaultdict(lambda: defaultdict(dict))
