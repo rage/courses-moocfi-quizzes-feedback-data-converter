@@ -221,13 +221,20 @@ for chapter in res:
     schema = ["created_at", "user_id", "submission_id"]
     schema.extend(all_keys)
     schema.extend(["Mean", "Median", "Standard deviation"])
-    df_chapter = pl.DataFrame(data, schema=schema)
+    df_chapter = pl.DataFrame(data, schema=schema).sort(
+        by="created_at", descending=True
+    )
     df_chapter.write_excel(
         workbook=workbook,
         worksheet=f"Chapter {chapter}",
         header_format={"bold": True, "text_wrap": True, "valign": "top"},
         row_heights={0: 200},
-        column_widths={"submission_id": 300, "Open feedback": 600},
+        column_widths={
+            "created_at": 140,
+            "submission_id": 270,
+            "user_id": 270,
+            "Open feedback": 600,
+        },
     )
 
 workbook.close()
