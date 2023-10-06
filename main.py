@@ -39,7 +39,7 @@ def main():
         print(
             "Created config.yml from template. Please edit the file and run the script again."
         )
-        return
+        sys.exit(255)
 
     with open("config.yml", "r") as ymlfile:
         cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
@@ -77,14 +77,14 @@ def main():
         print(
             "No submission files found in ./data folder. Please download the data export and place the files in the ./data folder."
         )
-        exit(255)
+        sys.exit(255)
     most_recent_submission_file = submission_files[0]
 
     if len(exercise_tasks_files) == 0:
         print(
             "No exercise tasks files found in ./data folder. Please download the data export and place the files in the ./data folder."
         )
-        exit(255)
+        sys.exit(255)
     most_recent_exercisetasks_file = exercise_tasks_files[0]
 
     print(f'Using the file "{most_recent_submission_file}" as input for submissions.')
@@ -179,13 +179,6 @@ def main():
                     print("Error", e)
                     print("item_answer", item_answer)
                     raise e
-
-        # pprint(data_json)
-
-        # if 1==1:
-        #     exit(0)
-
-    # print(df_submisssions)
 
     ### Writing the result
     # extract all keys from the nested dict
