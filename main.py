@@ -30,10 +30,10 @@ def main():
         with open("config.yml", "w") as f:
             f.write(
                 """feedback-exercises:
-    - chapter_number: 1
-      exercise_id: x
-    - chapter_number: 2
-      exercise_id: y
+  - chapter_number: 1
+    exercise_id: x
+  - chapter_number: 2
+    exercise_id: y
               """
             )
         print(
