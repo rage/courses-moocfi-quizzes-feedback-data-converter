@@ -22,7 +22,7 @@ def main():
     # To make Gooey work, we need to use argparse
     parser = ArgumentParser(add_help=True)
     args = parser.parse_args()
-    print("🚀 Starting the program")
+    print("Starting the program")
 
     # Change pwd to the directory of this file
     abspath = os.path.abspath(current_file_path)
@@ -270,7 +270,7 @@ def main():
 
     workbook.close()
     print()
-    print(f"✅ Processing complete. Results written to {excel_output_path}")
+    print(f"Processing complete. Results written to {excel_output_path}")
 
 
 if __name__ == "__main__":
