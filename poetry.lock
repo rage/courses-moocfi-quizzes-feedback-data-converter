@@ -1,4 +1,12 @@
 [[package]]
+name = "altgraph"
+version = "0.17.4"
+description = "Python graph (network) package"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "appnope"
 version = "0.1.3"
 description = "Disable App Nap on macOS >= 10.9"
@@ -46,6 +54,14 @@ description = "Cross-platform colored terminal text."
 category = "dev"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
+
+[[package]]
+name = "colored"
+version = "2.2.3"
+description = "Simple python library for color and formatting to terminal"
+category = "main"
+optional = false
+python-versions = ">=3.9"
 
 [[package]]
 name = "comm"
@@ -100,6 +116,21 @@ python-versions = "*"
 
 [package.extras]
 tests = ["asttokens", "pytest", "littleutils", "rich"]
+
+[[package]]
+name = "gooey"
+version = "1.0.8.1"
+description = "Turn (almost) any command line program into a full GUI application with one line"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+colored = ">=1.3.93"
+Pillow = ">=4.3.0"
+psutil = ">=5.4.2"
+pygtrie = ">=2.3.3"
+wxpython = ">=4.1.0"
 
 [[package]]
 name = "ipykernel"
@@ -220,6 +251,17 @@ docs = ["myst-parser", "sphinx-autodoc-typehints", "sphinxcontrib-github-alt", "
 test = ["ipykernel", "pre-commit", "pytest", "pytest-cov", "pytest-timeout"]
 
 [[package]]
+name = "macholib"
+version = "1.16.3"
+description = "Mach-O header analysis and editing"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+altgraph = ">=0.17"
+
+[[package]]
 name = "matplotlib-inline"
 version = "0.1.6"
 description = "Inline Matplotlib backend for Jupyter"
@@ -267,6 +309,14 @@ qa = ["flake8 (==3.8.3)", "mypy (==0.782)"]
 testing = ["docopt", "pytest (<6.0.0)"]
 
 [[package]]
+name = "pefile"
+version = "2023.2.7"
+description = "Python PE parsing module"
+category = "dev"
+optional = false
+python-versions = ">=3.6.0"
+
+[[package]]
 name = "pexpect"
 version = "4.8.0"
 description = "Pexpect allows easy control of interactive console applications."
@@ -284,6 +334,18 @@ description = "Tiny 'shelve'-like database with concurrency support"
 category = "dev"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "pillow"
+version = "10.0.1"
+description = "Python Imaging Library (Fork)"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.extras]
+docs = ["furo", "olefile", "sphinx (>=2.4)", "sphinx-copybutton", "sphinx-inline-tabs", "sphinx-removed-in", "sphinxext-opengraph"]
+tests = ["check-manifest", "coverage", "defusedxml", "markdown2", "olefile", "packaging", "pyroma", "pytest", "pytest-cov", "pytest-timeout"]
 
 [[package]]
 name = "platformdirs"
@@ -339,7 +401,7 @@ wcwidth = "*"
 name = "psutil"
 version = "5.9.5"
 description = "Cross-platform lib for process and system monitoring in Python."
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
@@ -385,6 +447,41 @@ python-versions = ">=3.7"
 plugins = ["importlib-metadata"]
 
 [[package]]
+name = "pygtrie"
+version = "2.5.0"
+description = "A pure Python trie data structure implementation."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "pyinstaller"
+version = "6.0.0"
+description = "PyInstaller bundles a Python application and all its dependencies into a single package."
+category = "dev"
+optional = false
+python-versions = "<3.13,>=3.8"
+
+[package.dependencies]
+altgraph = "*"
+macholib = {version = ">=1.8", markers = "sys_platform == \"darwin\""}
+packaging = ">=20.0"
+pefile = {version = ">=2022.5.30", markers = "sys_platform == \"win32\""}
+pyinstaller-hooks-contrib = ">=2021.4"
+pywin32-ctypes = {version = ">=0.2.1", markers = "sys_platform == \"win32\""}
+
+[package.extras]
+hook_testing = ["pytest (>=2.7.3)", "execnet (>=1.5.0)", "psutil"]
+
+[[package]]
+name = "pyinstaller-hooks-contrib"
+version = "2023.9"
+description = "Community maintained hooks for PyInstaller"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
 name = "python-dateutil"
 version = "2.8.2"
 description = "Extensions to the standard Python datetime module"
@@ -402,6 +499,14 @@ description = "Python for Window Extensions"
 category = "dev"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "pywin32-ctypes"
+version = "0.2.2"
+description = "A (partial) reimplementation of pywin32 using ctypes/cffi"
+category = "dev"
+optional = false
+python-versions = ">=3.6"
 
 [[package]]
 name = "pyyaml"
@@ -426,7 +531,7 @@ cffi = {version = "*", markers = "implementation_name == \"pypy\""}
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
@@ -475,6 +580,19 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "wxpython"
+version = "4.2.1"
+description = "Cross platform GUI toolkit for Python, \"Phoenix\" version"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+numpy = {version = "*", markers = "python_version >= \"3.0\" and python_version < \"3.12\""}
+pillow = "*"
+six = "*"
+
+[[package]]
 name = "xlsxwriter"
 version = "3.1.4"
 description = "A Python module for creating Excel XLSX files."
@@ -485,31 +603,37 @@ python-versions = ">=3.6"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<3.13"
-content-hash = "67f55fe61691a6710698ece71d05769fdc88a72ec379a1b89d89805e2671e0e1"
+content-hash = "fa6400eec0dea97af32926891c84e38467bfb9daa22405307e387dc31a0797de"
 
 [metadata.files]
+altgraph = []
 appnope = []
 asttokens = []
 backcall = []
 cffi = []
 colorama = []
+colored = []
 comm = []
 debugpy = []
 decorator = []
 exceptiongroup = []
 executing = []
+gooey = []
 ipykernel = []
 ipython = []
 jedi = []
 jupyter-client = []
 jupyter-core = []
+macholib = []
 matplotlib-inline = []
 nest-asyncio = []
 numpy = []
 packaging = []
 parso = []
+pefile = []
 pexpect = []
 pickleshare = []
+pillow = []
 platformdirs = []
 polars = []
 prompt-toolkit = []
@@ -518,8 +642,12 @@ ptyprocess = []
 pure-eval = []
 pycparser = []
 pygments = []
+pygtrie = []
+pyinstaller = []
+pyinstaller-hooks-contrib = []
 python-dateutil = []
 pywin32 = []
+pywin32-ctypes = []
 pyyaml = []
 pyzmq = []
 six = []
@@ -527,4 +655,5 @@ stack-data = []
 tornado = []
 traitlets = []
 wcwidth = []
+wxpython = []
 xlsxwriter = []

@@ -9,6 +9,7 @@ from datetime import date
 import numpy as np
 import pdb
 import sys
+from argparse import ArgumentParser
 
 current_file_path = sys.executable
 basename = os.path.basename(current_file_path)
@@ -18,8 +19,12 @@ if basename == "python.exe" or basename == "python" or basename == "python3":
 
 
 def main():
-    # Change pwd to the directory of this file
+    # To make Gooey work, we need to use argparse
+    parser = ArgumentParser(add_help=True)
+    args = parser.parse_args()
+    print("🚀 Starting the program")
 
+    # Change pwd to the directory of this file
     abspath = os.path.abspath(current_file_path)
     dname = os.path.dirname(abspath)
     print(f"Using working directory {dname}")
@@ -202,9 +207,8 @@ def main():
     print()
 
     current_timestamp_in_iso_format = date.today().isoformat()
-    workbook = xlsxwriter.Workbook(
-        f"./output/feedback_{current_timestamp_in_iso_format}.xlsx"
-    )
+    excel_output_path = f"./output/feedback_{current_timestamp_in_iso_format}.xlsx"
+    workbook = xlsxwriter.Workbook(excel_output_path)
 
     # create output folder if it does not exist
     if not os.path.exists("./output"):
@@ -265,7 +269,25 @@ def main():
         )
 
     workbook.close()
+    print()
+    print(f"✅ Processing complete. Results written to {excel_output_path}")
 
 
 if __name__ == "__main__":
+    if "--help" in sys.argv or "-h" in sys.argv:
+        print("Note: To run this program with a graphical user interface, use --gui")
+    # If we are not running from the terminal, run with GUI
+    run_with_gui = not sys.stdin.isatty()
+    if "--gui" in sys.argv:
+        run_with_gui = True
+    if run_with_gui:
+        from gooey import Gooey
+
+        main = Gooey(
+            auto_start=True,
+            program_name="Feedback data converter",
+            # make the window a little bigger
+            default_size=(800, 900),
+            terminal_font_family="monospace",
+        )(main)
     main()
