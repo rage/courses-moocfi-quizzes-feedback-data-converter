@@ -22,8 +22,13 @@ def main():
 
     abspath = os.path.abspath(current_file_path)
     dname = os.path.dirname(abspath)
-    print(f"Changing working directory to {dname}")
+    print(f"Using working directory {dname}")
     os.chdir(dname)
+
+    # Create the data folder if it does not exist
+    if not os.path.exists("./data"):
+        print("Creating ./data folder. You'll need to place the exported data there.")
+        os.makedirs("./data")
 
     # If config.yml does not exist, create it from the template
     if not os.path.exists("config.yml"):
@@ -44,10 +49,6 @@ def main():
     with open("config.yml", "r") as ymlfile:
         cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
     print("Loaded config.yml")
-
-    # Create the data folder if it does not exist
-    if not os.path.exists("./data"):
-        os.makedirs("./data")
 
     # Read the needed files from the ./data repository
     submission_files = []
