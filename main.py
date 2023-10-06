@@ -277,7 +277,9 @@ if __name__ == "__main__":
     if "--help" in sys.argv or "-h" in sys.argv:
         print("Note: To run this program with a graphical user interface, use --gui")
     # If we are not running from the terminal, run with GUI
-    run_with_gui = not sys.stdin.isatty()
+    run_with_gui = False
+    if sys.stdin is None or not sys.stdin.isatty():
+        run_with_gui = True
     if "--gui" in sys.argv:
         run_with_gui = True
     if run_with_gui:
