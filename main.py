@@ -5,7 +5,7 @@ import json
 from pprint import pprint
 from collections import defaultdict
 import xlsxwriter
-from datetime import date
+from datetime import date, datetime
 import numpy as np
 import pdb
 import sys
@@ -73,10 +73,10 @@ def main():
 
     # Sort the files by date, most recent first
     submission_files = sorted(
-        submission_files, key=lambda x: (x.split(" ")[-1]), reverse=True
+        submission_files, key=sort_by_date_in_filename, reverse=True
     )
     exercise_tasks_files = sorted(
-        exercise_tasks_files, key=lambda x: (x.split(" ")[-1]), reverse=True
+        exercise_tasks_files, key=sort_by_date_in_filename, reverse=True
     )
 
     if len(submission_files) == 0:
@@ -293,3 +293,9 @@ if __name__ == "__main__":
             terminal_font_family="monospace",
         )(main)
     main()
+
+
+def sort_by_date_in_filename(filename):
+    date_as_string = filename.split(" ")[-1]
+    # convert to datetiem object
+    return datetime.strptime(date_as_string, "%Y-%m-%d.csv")
