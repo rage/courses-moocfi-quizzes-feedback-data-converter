@@ -17,6 +17,11 @@ if basename == "python.exe" or basename == "python" or basename == "python3":
     print("Running from source")
     current_file_path = __file__
 
+def sort_by_date_in_filename(filename):
+    date_as_string = filename.split(" ")[-1]
+    # convert to datetiem object
+    return datetime.strptime(date_as_string, "%Y-%m-%d.csv")
+
 
 def main():
     # To make Gooey work, we need to use argparse
@@ -293,9 +298,3 @@ if __name__ == "__main__":
             terminal_font_family="monospace",
         )(main)
     main()
-
-
-def sort_by_date_in_filename(filename):
-    date_as_string = filename.split(" ")[-1]
-    # convert to datetiem object
-    return datetime.strptime(date_as_string, "%Y-%m-%d.csv")
